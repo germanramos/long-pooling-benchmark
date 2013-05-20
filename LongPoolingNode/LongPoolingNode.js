@@ -20,6 +20,7 @@ http.createServer(function (req, res) {
   	res.end("Done " + i + " requests in " + totalTime + "ms" );
   } else {
   	console.log("Ignoring request");
+  	res.end();
   }
   
 }).listen(1337, '127.0.0.1');
