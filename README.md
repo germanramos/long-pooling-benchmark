@@ -1,7 +1,7 @@
 Vert.x with Java
 ================
 
-# Description
+## Description
 
 This code tests the performance of open concurrent sockets using Vert.x with Java
 
