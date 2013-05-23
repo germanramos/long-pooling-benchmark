@@ -26,10 +26,8 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HomeController.class);
 	
-	//private List<DeferredResult<String>> reqs = new ArrayList<DeferredResult<String>>();
-	
-	private Map<String, DeferredResult<String>> reqs = new ConcurrentHashMap<String, DeferredResult<String>>();
-
+	private List<DeferredResult<String>> reqs = new ArrayList<DeferredResult<String>>();
+	//private Map<String, DeferredResult<String>> reqs = new ConcurrentHashMap<String, DeferredResult<String>>();
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -38,8 +36,10 @@ public class HomeController {
 	@ResponseBody
 	public DeferredResult<String> home() {
 		DeferredResult<String> result = new DeferredResult<String>(0);
-		//reqs.add(result);
-		reqs.put(UUID.randomUUID().toString(), result);
+		//reqs.put(UUID.randomUUID().toString(), result);
+		synchronized(reqs) {
+			reqs.add(result);
+		}
 		return result;
 	}
 	
@@ -47,15 +47,22 @@ public class HomeController {
 	@ResponseBody
 	public String send(@PathVariable String data) {
 		long startTime = java.lang.System.currentTimeMillis();
-		int i = 0;		
+		/*
+		int i = 0;
 		for (Entry<String, DeferredResult<String>> entry : this.reqs.entrySet()) {
 		    entry.getValue().setResult(data + "\n");
 		    //entry.getKey();
 		    i++;
 		}
 		reqs.clear();
+		*/
+		int count = reqs.size();
+		while (!reqs.isEmpty()) {
+			reqs.get(0).setResult(data);
+			reqs.remove(0);
+		}
 		long endTime = java.lang.System.currentTimeMillis();
 		long totalTime = endTime - startTime;
-		return "Done " + i + " responses in " + totalTime + "ms";
+		return "Done " + count + " responses in " + totalTime + "ms";
 	}
 }
