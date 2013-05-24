@@ -1,15 +1,7 @@
 package com.bbva.longpooling;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +14,8 @@ import org.springframework.web.context.request.async.DeferredResult;
  */
 @Controller
 public class HomeController {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(HomeController.class);
 	
 	private List<DeferredResult<String>> reqs = new ArrayList<DeferredResult<String>>();
-	//private Map<String, DeferredResult<String>> reqs = new ConcurrentHashMap<String, DeferredResult<String>>();
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -36,7 +24,6 @@ public class HomeController {
 	@ResponseBody
 	public DeferredResult<String> home() {
 		DeferredResult<String> result = new DeferredResult<String>(0);
-		//reqs.put(UUID.randomUUID().toString(), result);
 		synchronized(reqs) {
 			reqs.add(result);
 		}
@@ -47,15 +34,6 @@ public class HomeController {
 	@ResponseBody
 	public String send(@PathVariable String data) {
 		long startTime = java.lang.System.currentTimeMillis();
-		/*
-		int i = 0;
-		for (Entry<String, DeferredResult<String>> entry : this.reqs.entrySet()) {
-		    entry.getValue().setResult(data + "\n");
-		    //entry.getKey();
-		    i++;
-		}
-		reqs.clear();
-		*/
 		int count = reqs.size();
 		while (!reqs.isEmpty()) {
 			reqs.get(0).setResult(data);
