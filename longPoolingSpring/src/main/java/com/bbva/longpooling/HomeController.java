@@ -17,12 +17,9 @@ public class HomeController {
 	
 	private List<DeferredResult<String>> reqs = new ArrayList<DeferredResult<String>>();
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
 	@RequestMapping(value = "/async", method = RequestMethod.GET)
 	@ResponseBody
-	public DeferredResult<String> home() {
+	public DeferredResult<String> async() {
 		DeferredResult<String> result = new DeferredResult<String>(0);
 		synchronized(reqs) {
 			reqs.add(result);

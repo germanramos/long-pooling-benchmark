@@ -10,7 +10,9 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
+	<annotation-driven>
+		<async-support task-executor="myTaskExecutor" default-timeout="5000" />	
+	</annotation-driven>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -23,6 +25,10 @@
 	
 	<context:component-scan base-package="com.bbva.longpooling" />
 	
-	
+	<beans:bean id="myTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	    <beans:property name="corePoolSize" value="5" />
+	    <beans:property name="maxPoolSize" value="10" />
+	    <beans:property name="queueCapacity" value="25" />
+	</beans:bean>
 	
 </beans:beans>
