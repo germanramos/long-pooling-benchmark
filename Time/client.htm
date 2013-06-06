@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Time Client</title>
+        <style>
+            #time {
+                text-align: center;
+                font-size: 40px;
+                font-weight: bold
+            }
+            #server {
+                text-align: center;
+                font-size: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="time">Initializing...</div>
+        <div id="server">Initializing...</div>
+    </body>
+    <script>
+        var servers = ["127.0.0.1:1337", "vallecas.no-ip.org:1337"];
+
+        function updatePage(time) {
+            document.getElementById("time").innerHTML = time;
+            document.getElementById("server").innerHTML = servers[0];
+            makeRequest();
+        }
+
+        function makeRequest() {
+            xmlHttpReq = new XMLHttpRequest();
+            xmlHttpReq.open('GET', "http://" + servers[0], true);
+            xmlHttpReq.onreadystatechange = function() {
+                if (xmlHttpReq.readyState == 4) {
+                    if (xmlHttpReq.status==200) {
+                        updatePage(xmlHttpReq.responseText);
+                    } else {
+                        //Put the current first server at last position
+                        servers.push(servers.shift());
+                        makeRequest();
+                    }
+                }
+            }
+            xmlHttpReq.send(null);
+        }
+        
+        makeRequest();
+    </script>
+</html>
