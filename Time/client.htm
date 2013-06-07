@@ -3,13 +3,15 @@
         <meta charset="utf-8">
         <title>Time Client</title>
         <style>
-            #time {
+            body {
                 text-align: center;
+            }
+            #time {
                 font-size: 40px;
                 font-weight: bold
             }
             #server {
-                text-align: center;
+                
                 font-size: 20px;
             }
         </style>
@@ -17,19 +19,22 @@
     <body>
         <div id="time">Initializing...</div>
         <div id="server">Initializing...</div>
+        <input id="button" type="button" value="Stop"/>
     </body>
     <script>
-        var servers = ["127.0.0.1:1337", "vallecas.no-ip.org:1337"];
-
+        var servers = ["server1.cloud1.com:1337", "server2.cloud1.com:1337"];
+        var refresh = true;
+        
         function updatePage(time) {
             document.getElementById("time").innerHTML = time;
             document.getElementById("server").innerHTML = servers[0];
-            makeRequest();
+            if (refresh) makeRequest();
         }
 
         function makeRequest() {
             xmlHttpReq = new XMLHttpRequest();
             xmlHttpReq.open('GET', "http://" + servers[0], true);
+            xmlHttpReq.timeout = 4000;
             xmlHttpReq.onreadystatechange = function() {
                 if (xmlHttpReq.readyState == 4) {
                     if (xmlHttpReq.status==200) {
@@ -37,11 +42,21 @@
                     } else {
                         //Put the current first server at last position
                         servers.push(servers.shift());
-                        makeRequest();
+                        if (refresh) makeRequest();
                     }
                 }
             }
             xmlHttpReq.send(null);
+        }
+        
+        document.getElementById("button").onclick = function() {
+            refresh = !refresh;
+            if (refresh) {
+                this.value = "Stop";
+                makeRequest();
+            } else {
+                this.value = "Start";
+            }
         }
         
         makeRequest();
