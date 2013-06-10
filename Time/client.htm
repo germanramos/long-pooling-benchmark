@@ -15,6 +15,7 @@
                 font-size: 20px;
             }
         </style>
+        <script type="text/javascript" src="http://localhost:7000/js/hydra.js"></script>
     </head>
     <body>
         <div id="time">Initializing...</div>
@@ -22,8 +23,24 @@
         <input id="button" type="button" value="Stop"/>
     </body>
     <script>
-        var servers = ["server1.cloud1.com:1337", "server2.cloud1.com:1337"];
+    	var service="time";
+    	var hydraRefreshWait = 5000;
+    	var errorWait = 2000;
+    	var ajaxTimeout = 4000;
+    	
+        //var servers = ["http://server1.cloud1.com:1337", "http://server2.cloud1.com:1337"];
+        var servers = [];
         var refresh = true;
+        
+        updateServers();
+        
+        function updateServers() {
+	        hydra.get("time", true, function(err, result){
+				servers = result;
+			})
+			setTimeout(updateServers, hydraRefreshWait);
+		}
+		
         
         function updatePage(time) {
             document.getElementById("time").innerHTML = time;
@@ -32,9 +49,13 @@
         }
 
         function makeRequest() {
+        	if (servers == null || servers.length < 1) {
+        		setTimeout(makeRequest, errorWait);
+        		return;
+        	}
             xmlHttpReq = new XMLHttpRequest();
-            xmlHttpReq.open('GET', "http://" + servers[0], true);
-            xmlHttpReq.timeout = 4000;
+            xmlHttpReq.open('GET', servers[0], true);
+            xmlHttpReq.timeout = ajaxTimeout;
             xmlHttpReq.onreadystatechange = function() {
                 if (xmlHttpReq.readyState == 4) {
                     if (xmlHttpReq.status==200) {

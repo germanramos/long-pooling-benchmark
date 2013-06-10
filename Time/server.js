@@ -18,6 +18,7 @@ http.createServer(function(req, res) {
 	setTimeout(function() {
 		var now = new Date();
 		res.end(now.getUTCHours() + ':' + now.getUTCMinutes() + ':' + now.getUTCSeconds() + '\n');
+		req.connection.end();
 	}, delay);
 }).listen(port, host);
 console.log('Server running at http://' + host + ':' + port);
