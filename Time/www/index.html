@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Hydra Index</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$('#start').click(function(){
+				$('#results').html('');
+				var connections = parseInt($('#connections').val(), 10);
+				$.get('http://localhost:5000/start/' + connections, function(data){
+					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+				});
+			});
+
+			$('#info').click(function(){
+				$('#results').html('');
+				$.get('http://localhost:5000/info', function(data){
+					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+				});
+			});
+
+			$('#stop').click(function(){
+				$('#results').html('');
+				$.get('http://localhost:5000/stop', function(data){
+					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+	Apps: <input type='text' id='connections' value='1' />
+	<button id='start'>Start</button>
+	<button id='info'>Info</button>
+	<button id='stop'>Stop</button>
+	<br />
+	<div id='results'></div>
+</body>
+</html>
