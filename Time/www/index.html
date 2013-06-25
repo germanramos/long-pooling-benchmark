@@ -12,28 +12,36 @@
 				$('#results').html('');
 				var connections = parseInt($('#connections').val(), 10);
 				$.get('http://localhost:5000/start/' + connections, function(data){
-					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+					showData(data)
 				});
 			});
 
 			$('#info').click(function(){
 				$('#results').html('');
 				$.get('http://localhost:5000/info', function(data){
-					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+					showData(data)
 				});
 			});
 
 			$('#stop').click(function(){
 				$('#results').html('');
 				$.get('http://localhost:5000/stop', function(data){
-					$('#results').html('<div> Count: ' + data.count +'</div><div>Requests: '+data.requests+'</div>');
+					showData(data);
 				});
 			});
+
+			function showData(data) {
+				var str = '';
+				for(var key in data){
+					str+= '<div> ' + key + ': ' + data[key] +'</div>';
+				}
+				$('#results').html(str);
+			}
 		});
 	</script>
 </head>
 <body>
-	Apps: <input type='text' id='connections' value='1' />
+	Connections: <input type='text' id='connections' value='1' />
 	<button id='start'>Start</button>
 	<button id='info'>Info</button>
 	<button id='stop'>Stop</button>
