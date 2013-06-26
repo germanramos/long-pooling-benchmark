@@ -4,7 +4,8 @@ var hydra = require('../../hydra/src/hydra-node'),
 	express = require('express'),
 	app = express();
 
-http.globalAgent.maxSockets = 100000;
+//http.globalAgent.maxSockets = 100000;
+http.globalAgent = false;
 
 var port = parseInt(process.argv[2],10) || 5000;
 
@@ -106,12 +107,10 @@ function makeRequest() {
 	}
 
 	var url = servers[0];
-	var agent = new http.Agent();
-		agent.maxSockets = 10;
 	var options = {
 		url : url,
 		timeout : 6000,
-		agent: agent
+		agent: false
 	};
 	conns++;
 	request(options, function(error, response, body) {
