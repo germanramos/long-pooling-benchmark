@@ -4,8 +4,8 @@ var hydra = require('../../hydra/src/hydra-node'),
 	express = require('express'),
 	app = express();
 
-//http.globalAgent.maxSockets = 100000;
-http.globalAgent = false;
+http.globalAgent.maxSockets = 100000;
+//http.globalAgent = false;
 
 var port = parseInt(process.argv[2],10) || 5000;
 
@@ -111,7 +111,7 @@ function makeRequest() {
 	var options = {
 		url : url,
 		timeout : 6000,
-		agent: false
+		//agent: false
 	};
 	conns++;
 	request(options, function(error, response, body) {
@@ -120,7 +120,7 @@ function makeRequest() {
 		if (response && response.statusCode && response.statusCode == 200) {
 			customWait = randomWait;
 		} else {
-			blacklistAdd(url);
+			//blacklistAdd(url);
 		}
 
 		if(!stop) setTimeout(makeRequest, Math.floor(Math.random()*customWait));
