@@ -5,27 +5,46 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		td {
+			padding:2.5px 5px;
+		}
+		.longInput {
+			width:300px;
+		}
+	</style>
 	<script type="text/javascript">
 		$(document).ready(function(){
 
 			$('#start').click(function(){
 				$('#results').html('');
+
+				var host = $('#host').val();
+				var hydras = $('#hydras').val().length > 0 ? '?hydras='+$('#hydras').val() : ''
+				var app = $('#app').val().length > 0 ? '?app='+$('#app').val() : 'time'
 				var connections = parseInt($('#connections').val(), 10);
-				$.get('http://localhost:5000/start/' + connections, function(data){
+				
+				$.get(host + '/start/' + connections + hydras, function(data){
 					showData(data)
 				});
 			});
 
 			$('#info').click(function(){
 				$('#results').html('');
-				$.get('http://localhost:5000/info', function(data){
+				
+				var host = $('#host').val();
+				
+				$.get(host + '/info', function(data){
 					showData(data)
 				});
 			});
 
 			$('#stop').click(function(){
 				$('#results').html('');
-				$.get('http://localhost:5000/stop', function(data){
+				
+				var host = $('#host').val();
+				
+				$.get(host + '/stop', function(data){
 					showData(data);
 				});
 			});
@@ -41,11 +60,33 @@
 	</script>
 </head>
 <body>
-	Connections: <input type='text' id='connections' value='1' />
-	<button id='start'>Start</button>
-	<button id='info'>Info</button>
-	<button id='stop'>Stop</button>
-	<br />
+	<table cellpadding='0' cellspacing='0'>
+		<tr>
+			<td>Host</td>
+			<td><input type='text' id='host' value='http://localhost:5000' class='longInput' /></td>
+		</tr>
+		<tr>
+			<td><span style='cursor:help;' title='Coma delimited Hydra server URLS'>Hydras</span></td>
+			<td><input type='text' id='hydras' value='http://1.hydra.innotechapp.com:80' class='longInput' title='Coma delimited Hydra server URLS' /></td>
+		</tr>
+		<tr>
+			<td>App</td>
+			<td><input type='text' id='app' value='time' class='longInput' /></td>
+		</tr>
+		<tr>
+			<td>Connections</td>
+			<td><input type='text' id='connections' value='1' /></td>
+		</tr>
+		<tr>
+			<td colspan='3'>
+				<button id='start'>Start</button>
+				<button id='info'>Info</button>
+				<button id='stop'>Stop</button>
+			</td>
+		</tr>
+	</table>
+
+	
 	<div id='results'></div>
 </body>
 </html>

@@ -32,26 +32,27 @@ app.configure(function() {
 });
 
 app.get('/start/:connections', function(req, res){
-	var hydraServers = (req.query.hydra ? req.query.hydra.split(',') : ['http://1.hydra.innotechapp.com:80']);
+	var hydraServers = (req.query.hydras ? req.query.hydras.split(',') : ['http://1.hydra.innotechapp.com:80']);
+	service = req.query.app || 'time';
 	startRequests((parseInt(req.params.connections,10) || 1), hydraServers);
-	res.send(200, {count: conns, started: !stop});
+	res.send(200, {host: req.headers.host, app: service, connections: conns, started: !stop});
 });
 
 app.get('/info', function(req, res){
-	res.send(200, {count: conns, started: !stop});
+	res.send(200, {host: req.headers.host, app: service, connections: conns, started: !stop});
 });
 
 app.get('/stop', function(req, res){
 	stop = true;
 	console.log('Stopping connections');
-	res.send(200, {count: conns, started: !stop});
+	res.send(200, {host: req.headers.host, app: service, connections: conns, started: !stop});
 });
 
 app.listen(port);
 console.log('Stress-time listening on port', port);
 
 function startRequests(connections, hydraServers) {
-	console.log('Starting', connections, 'connections on', hydraServers);
+	console.log('Starting', connections, 'connections for', service, 'on', hydraServers);
 	stop = false;
 	hydra.config(hydraServers);
 	updateServers();
