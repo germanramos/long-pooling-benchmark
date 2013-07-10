@@ -75,7 +75,7 @@ function makeRequest() {
 			//servers.push(servers.shift());	
 			//servers.splice(servers.indexOf(url), 1);
 			var customWait = 0;
-			blacklistAdd(url);
+			//blacklistAdd(url);
 		}
 		setTimeout(makeRequest, Math.floor(Math.random()*customWait));
 		//makeRequest();
