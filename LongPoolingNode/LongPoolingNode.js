@@ -1,19 +1,16 @@
-var reqs = []
 var http = require('http');
+var reqs = [];
 
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  //console.log(req.url);
+
   if (req.url == "/async") {
-  	//console.log("Async request queued"); 
   	reqs.push(res);
-  } else if (req.url.indexOf("/send") == 0) {
-  	//console.log("Send request"); 
+  } else if (req.url.indexOf("/send") === 0) {
   	var startTime = new Date().getTime();
   	for (var i=0; reqs.length>0; i++) {
     	reqs[0].end(req.url.slice(6));
     	reqs.shift();
-  		//console.log(i + ': Send data: ' + req.url);
   	}
   	var endTime = new Date().getTime();
   	var totalTime = endTime - startTime;
@@ -22,6 +19,6 @@ http.createServer(function (req, res) {
   	console.log("Ignoring request");
   	res.end();
   }
-  
+
 }).listen(1337, '0.0.0.0');
 console.log('Server running at http://0.0.0.0:1337/');

@@ -200,3 +200,4 @@ node_modules
 ################
 dump.rdb
 /nbproject/private/
+jetty-runner.jar

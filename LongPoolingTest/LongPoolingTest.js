@@ -18,29 +18,28 @@ var number = parseInt(process.argv[5]);
 callback = function(response) {
   var str = '';
 
-  //another chunk of data has been recieved, so append it to `str`
   response.on('data', function (chunk) {
     str += chunk;
   });
 
-  //the whole response has been recieved, so we just print it out here
   response.on('end', function () {
     console.log(str);
   });
+};
+
+function logError(i) {
+	return function(e) {
+		console.log('Problem with request: ' + i + ": " + e.message);
+	};
 }
 
 console.log('Making requests ' + number);
 console.log(options);
-for (var i=0; i<number; i++) {
+for (var i = 0; i < number; i++) {
 	console.log('Making request ' + i);
-	var req=http.request(options, callback);
-	req.on('error', function(e) {
-  		console.log('Problem with request: ' + i + ": " + e.message);
-	});
+	var req = http.request(options, callback);
+	req.on('error', logError(i));
 	req.end();
 }
 
 console.log('Waiting');
-
-
-

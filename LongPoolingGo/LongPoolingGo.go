@@ -1,4 +1,4 @@
-package main 
+package main
 
 import (
     "net/http"
@@ -7,8 +7,6 @@ import (
     "time"
 )
 
-//var messages map[string] chan string = make(map[string] chan string)
-//var messages chan string  = make (chan string)
 var messages = list.New()
 
 func asyncHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,13 +21,12 @@ func sendHandler(w http.ResponseWriter, r *http.Request) {
 	var ch chan string
 	startTime := time.Now()
 	var count int64 = 0
-	for e := messages.Front(); e != nil; e = messages.Front() {	
+	for e := messages.Front(); e != nil; e = messages.Front() {
 		ch = e.Value.(chan string)
 		ch <- msg
 		messages.Remove(e)
 		count++
 	}
-	
 	endTime :=time.Now()
 	fmt.Fprintf(w, "Done %d request in %f ms.\n", count, endTime.Sub(startTime).Seconds() * 1000 )
 }
@@ -46,5 +43,3 @@ func main() {
     fmt.Printf("Server running at http://0.0.0.0:2337/")
     sleepForEver()
 }
-
-
